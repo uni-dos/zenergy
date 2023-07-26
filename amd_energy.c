@@ -264,9 +264,18 @@ static int amd_create_sensor(struct device *dev,
 }
 
 static const struct x86_cpu_id bit32_rapl_cpus[] = {
-	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x31, NULL),
-	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x01, NULL),
-	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x30, NULL),
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x01, NULL),	/* Zen */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x08, NULL),	/* Zen+ */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x11, NULL),	/* Zen APU */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x18, NULL),	/* Picasso */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x31, NULL),	/* Zen2 Threadripper */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x60, NULL),	/* Renoir */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x68, NULL),	/* Lucienne */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x71, NULL),	/* Zen2 */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x01, NULL),	/* Zen3 Threadripper */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x21, NULL),	/* Zen3 */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x50, NULL),	/* Cezanne */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x60, NULL),	/* Rembrandt */
 	{}
 };
 
@@ -352,10 +361,18 @@ static struct platform_driver amd_energy_driver = {
 static struct platform_device *amd_energy_platdev;
 
 static const struct x86_cpu_id cpu_ids[] __initconst = {
-	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x31, NULL),
-	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x01, NULL),
-	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x10, NULL),
-	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x30, NULL),
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x01, NULL),	/* Zen */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x08, NULL),	/* Zen+ */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x11, NULL),	/* Zen APU */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x18, NULL),	/* Picasso */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x31, NULL),	/* Zen2 Threadripper */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x60, NULL),	/* Renoir */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x68, NULL),	/* Lucienne */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x71, NULL),	/* Zen2 */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x01, NULL),	/* Zen3 Threadripper */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x21, NULL),	/* Zen3 */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x50, NULL),	/* Cezanne */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x60, NULL),	/* Rembrandt */
 	{}
 };
 MODULE_DEVICE_TABLE(x86cpu, cpu_ids);
