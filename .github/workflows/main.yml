@@ -1,0 +1,40 @@
+name: Build Arch package
+
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  PKGDEST: "/tmp/package"
+
+jobs:
+  build-package:
+    runs-on: ubuntu-latest
+
+    container: archlinux:base-devel
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create build user
+        run: |
+          useradd -m build
+          cp -vR . /home/build/amd-energy
+          chown -vR build /home/build/amd-energy
+      - name: Set up pacman keyring
+        run: |
+          pacman-key --init
+          pacman-key --populate archlinux
+          mkdir -p /etc/gnupg && echo "auto-key-retrieve" >> /etc/gnupg/gpg.conf
+      - name: Install dependencies
+        run: |
+          pacman -Syu --noconfirm git dkms linux-headers
+      - name: Build amd-energy package
+        id: build-package
+        shell: bash
+        run: |
+          su build bash -c "cd /home/build/amd-energy && makepkg"
+      - name: Install package
+        id: install
+        shell: bash
+        run: |
+          pacman -U --noconfirm /tmp/package/*.pkg*
