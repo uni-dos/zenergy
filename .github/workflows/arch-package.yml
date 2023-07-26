@@ -27,14 +27,9 @@ jobs:
           mkdir -p /etc/gnupg && echo "auto-key-retrieve" >> /etc/gnupg/gpg.conf
       - name: Install dependencies
         run: |
-          pacman -Syu --noconfirm git dkms linux-headers
+          pacman -Syu --noconfirm git dkms linux-headers linux
       - name: Build amd-energy package
         id: build-package
         shell: bash
         run: |
           su build bash -c "cd /home/build/amd-energy && makepkg"
-      - name: Install package
-        id: install
-        shell: bash
-        run: |
-          pacman -U --noconfirm /tmp/package/*.pkg*
