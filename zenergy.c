@@ -99,7 +99,7 @@ static void __accumulate_delta(struct sensor_accumulator *accum,
 			accum->prev_value + input;
 
 	accum->prev_value = input;
-	accum->cache_timeout = jiffies + HZ + get_random_long() % HZ;
+	accum->cache_timeout = (jiffies + HZ + get_random_long()) % HZ;
 }
 
 static void accumulate_delta(struct zenergy_data *data,
