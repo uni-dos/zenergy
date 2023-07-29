@@ -1,4 +1,3 @@
-.. SPDX-License-Identifier: GPL-2.0
 # Zenergy kernel driver
 
 Based on AMD_ENERGY driver, but with some jiffies added so non-root users can read it safely.
@@ -65,8 +64,7 @@ MSR_RAPL_POWER_UNIT register. Default value is 10000b,
 indicating energy status unit is 15.3 micro-Joules increment.
 
 Reported values are scaled as per the formula
-
-scaled value = ((1/2^ESU) * (Raw value) * 1000000UL) in uJoules
+`scaled value = ((1/2^ESU) * (Raw value) * 1000000UL)` in uJoules
 
 Users calculate power for a given domain by calculating
 	dEnergy/dTime for that domain.
@@ -77,7 +75,7 @@ Energy accumulation
 Current, Socket energy status register is 32bit, assuming a 240W
 2P system, the register would wrap around in
 
-	2^32*15.3 e-6/240 * 2 = 547.60833024 secs to wrap(~9 mins)
+`2^32*15.3 e-6/240 * 2 = 547.60833024` secs to wrap(~9 mins)
 
 The Core energy register may wrap around after several days.
 
@@ -102,26 +100,10 @@ only on select EPYC CPUs with 32bit RAPL MSRs.
 Sysfs attributes
 ----------------
 
-=============== ========  =====================================
-Attribute	Label	  Description
-===============	========  =====================================
-
-* For index N between [1] and [nr_cpus]
-
-===============	========  ======================================
-energy[N]_input EcoreX	  Core Energy   X = [0] to [nr_cpus - 1]
-			  Measured input core energy
-===============	========  ======================================
-
-* For N between [nr_cpus] and [nr_cpus + nr_socks]
-
-===============	========  ======================================
-energy[N]_input EsocketX  Socket Energy X = [0] to [nr_socks -1]
-			  Measured input socket energy
-=============== ========  ======================================
-
-Note: To address CVE-2020-12912, the visibility of the energy[N]_input
-attributes is restricted to owner and groups only.
+| Attribute       | Label             | Description                                                  |
+| --------------- | ----------------- | ------------------------------------------------------------ |
+| energy[X]_input | Ecore[X] energy   | X = [0] to [nr_cpus - 1] Measured input core energy          |
+| energy[X]_input | Esocket[X] energy | X = [nr_cpus] to [nr_socks - 1] Measured input socket energy |
 
 Build and Install
 -----------------
@@ -131,34 +113,31 @@ prior to building the Energy module. A Makefile is provided which should
 work with most kernel source trees.
 
 To build the kernel module:
-
+```
 #> make
-
+```
 To install the kernel module:
-
+```
 #> sudo make modules_install
-
+```
 To clean the kernel module build directory:
-
+```
 #> make clean
-
+```
 
 Loading
 -------
 
 If the Energy module was installed you should use the modprobe command to
 load the module.
-
+```
 #> sudo modprobe zenergy
-
+```
 The Energy module can also be loaded using insmod if the module was not
 installed:
-
-The Energy module can also be loaded using insmod if the module was not
-installed:
-
+```
 #> sudo insmod ./zenergy.ko
-
+```
 
 DKMS support
 ------------
@@ -166,31 +145,41 @@ DKMS support
 Building Module with running version of kernel
 
 Add the module to DKMS tree:
+```
 #> sudo dkms add ../zenergy
-
+```
 Build the module using DKMS:
+```
 #> sudo dkms build -m zenergy/1.0
-
+```
 Install the module using DKMS:
+```
 #> sudo dkms install --force zenergy/1.0
-
+```
 Load the module:
+```
 #> sudo modprobe zenergy
-
+```
 Building Module with specific version of kernel
 
 Add the module to DKMS tree:
+```
 #> sudo dkms add ../zenergy
-
+```
 Build the module using DKMS:
+```
 #> sudo dkms build zenergy/1.0 -k linux_version
-
+```
 Install the module using DKMS:
+```
 #> sudo dkms install --force zenergy/1.0 -k linux_version
+```
 Module is built: /lib/modules/linux_version/updates/dkms/
 
 Notes: It is required to have specific linux verion header in /usr/src
 
 To remove module from dkms tree
+```
 #> sudo dkms remove -m zenergy/1.0 --all
 #> sudo rm -rf /usr/src/zenergy-1.0/
+```
