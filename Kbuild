@@ -5,4 +5,4 @@
 # Copyright (C) 2021 Advanced Micro Devices, Inc.
 #
 
-obj-m := amd_energy.o
+obj-m := zenergy.o

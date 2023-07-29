@@ -2,6 +2,7 @@
 
 /*
  * Copyright (C) 2020 Advanced Micro Devices, Inc.
+ * Edited by BouHaa (http://github.com/boukehaarsma23)
  */
 #include <asm/cpu_device_id.h>
 
@@ -29,14 +30,14 @@
 
 MODULE_VERSION(DRV_MODULE_VERSION);
 
-#define DRVNAME			"amd_energy"
+#define DRVNAME			"zenergy"
 
 #define ENERGY_PWR_UNIT_MSR	0xC0010299
 #define ENERGY_CORE_MSR		0xC001029A
 #define ENERGY_PKG_MSR		0xC001029B
 
-#define AMD_ENERGY_UNIT_MASK	0x01F00
-#define AMD_ENERGY_MASK		0xFFFFFFFF
+#define zenergy_UNIT_MASK	0x01F00
+#define zenergy_MASK		0xFFFFFFFF
 
 struct sensor_accumulator {
 	u64 energy_ctr;
@@ -44,7 +45,7 @@ struct sensor_accumulator {
 	unsigned long cache_timeout;
 };
 
-struct amd_energy_data {
+struct zenergy_data {
 	struct hwmon_channel_info energy_info;
 	const struct hwmon_channel_info *info[2];
 	struct hwmon_chip_info chip;
@@ -63,23 +64,23 @@ struct amd_energy_data {
 	bool do_not_accum;
 };
 
-static int amd_energy_read_labels(struct device *dev,
+static int zenergy_read_labels(struct device *dev,
 				  enum hwmon_sensor_types type,
 				  u32 attr, int channel,
 				  const char **str)
 {
-	struct amd_energy_data *data = dev_get_drvdata(dev);
+	struct zenergy_data *data = dev_get_drvdata(dev);
 
 	*str = data->label[channel];
 	return 0;
 }
 
-static void get_energy_units(struct amd_energy_data *data)
+static void get_energy_units(struct zenergy_data *data)
 {
 	u64 rapl_units;
 
 	rdmsrl_safe(ENERGY_PWR_UNIT_MSR, &rapl_units);
-	data->energy_units = (rapl_units & AMD_ENERGY_UNIT_MASK) >> 8;
+	data->energy_units = (rapl_units & zenergy_UNIT_MASK) >> 8;
 }
 
 static void __accumulate_delta(struct sensor_accumulator *accum,
@@ -88,7 +89,7 @@ static void __accumulate_delta(struct sensor_accumulator *accum,
 	u64 input;
 
 	rdmsrl_safe_on_cpu(cpu, reg, &input);
-	input &= AMD_ENERGY_MASK;
+	input &= zenergy_MASK;
 
 	if (input >= accum->prev_value)
 		accum->energy_ctr +=
@@ -101,7 +102,7 @@ static void __accumulate_delta(struct sensor_accumulator *accum,
 	accum->cache_timeout = jiffies + HZ + get_random_long() % HZ;
 }
 
-static void accumulate_delta(struct amd_energy_data *data,
+static void accumulate_delta(struct zenergy_data *data,
 			     int channel, int cpu, u32 reg)
 {
 	mutex_lock(&data->lock);
@@ -109,7 +110,7 @@ static void accumulate_delta(struct amd_energy_data *data,
 	mutex_unlock(&data->lock);
 }
 
-static void read_accumulate(struct amd_energy_data *data)
+static void read_accumulate(struct zenergy_data *data)
 {
 	int sock, scpu, cpu;
 
@@ -131,11 +132,11 @@ static void read_accumulate(struct amd_energy_data *data)
 	data->core_id++;
 }
 
-static int amd_energy_read(struct device *dev,
+static int zenergy_read(struct device *dev,
 			   enum hwmon_sensor_types type,
 			   u32 attr, int channel, long *val)
 {
-	struct amd_energy_data *data = dev_get_drvdata(dev);
+	struct zenergy_data *data = dev_get_drvdata(dev);
 	struct sensor_accumulator *accum;
 	u64 energy;
 	u32 reg;
@@ -167,7 +168,7 @@ static int amd_energy_read(struct device *dev,
 	return 0;
 }
 
-static umode_t amd_energy_is_visible(const void *_data,
+static umode_t zenergy_is_visible(const void *_data,
 				     enum hwmon_sensor_types type,
 				     u32 attr, int channel)
 {
@@ -176,7 +177,7 @@ static umode_t amd_energy_is_visible(const void *_data,
 
 static int energy_accumulator(void *p)
 {
-	struct amd_energy_data *data = (struct amd_energy_data *)p;
+	struct zenergy_data *data = (struct zenergy_data *)p;
 	unsigned int timeout = data->timeout_ms;
 
 	while (!kthread_should_stop()) {
@@ -195,14 +196,14 @@ static int energy_accumulator(void *p)
 	return 0;
 }
 
-static const struct hwmon_ops amd_energy_ops = {
-	.is_visible = amd_energy_is_visible,
-	.read = amd_energy_read,
-	.read_string = amd_energy_read_labels,
+static const struct hwmon_ops zenergy_ops = {
+	.is_visible = zenergy_is_visible,
+	.read = zenergy_read,
+	.read_string = zenergy_read_labels,
 };
 
 static int amd_create_sensor(struct device *dev,
-			     struct amd_energy_data *data,
+			     struct zenergy_data *data,
 			     enum hwmon_sensor_types type, u32 config)
 {
 	struct hwmon_channel_info *info = &data->energy_info;
@@ -279,19 +280,19 @@ static const struct x86_cpu_id bit32_rapl_cpus[] = {
 	{}
 };
 
-static int amd_energy_probe(struct platform_device *pdev)
+static int zenergy_probe(struct platform_device *pdev)
 {
 	struct device *hwmon_dev;
-	struct amd_energy_data *data;
+	struct zenergy_data *data;
 	struct device *dev = &pdev->dev;
 	int ret;
 
 	data = devm_kzalloc(dev,
-			    sizeof(struct amd_energy_data), GFP_KERNEL);
+			    sizeof(struct zenergy_data), GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;
 
-	data->chip.ops = &amd_energy_ops;
+	data->chip.ops = &zenergy_ops;
 	data->chip.info = data->info;
 
 	dev_set_drvdata(dev, data);
@@ -333,9 +334,9 @@ static int amd_energy_probe(struct platform_device *pdev)
 	return PTR_ERR_OR_ZERO(data->wrap_accumulate);
 }
 
-static int amd_energy_remove(struct platform_device *pdev)
+static int zenergy_remove(struct platform_device *pdev)
 {
-	struct amd_energy_data *data = dev_get_drvdata(&pdev->dev);
+	struct zenergy_data *data = dev_get_drvdata(&pdev->dev);
 
 	if (data && data->wrap_accumulate)
 		kthread_stop(data->wrap_accumulate);
@@ -343,22 +344,22 @@ static int amd_energy_remove(struct platform_device *pdev)
 	return 0;
 }
 
-static const struct platform_device_id amd_energy_ids[] = {
+static const struct platform_device_id zenergy_ids[] = {
 	{ .name = DRVNAME, },
 	{}
 };
-MODULE_DEVICE_TABLE(platform, amd_energy_ids);
+MODULE_DEVICE_TABLE(platform, zenergy_ids);
 
-static struct platform_driver amd_energy_driver = {
-	.probe = amd_energy_probe,
-	.remove	= amd_energy_remove,
-	.id_table = amd_energy_ids,
+static struct platform_driver zenergy_driver = {
+	.probe = zenergy_probe,
+	.remove	= zenergy_remove,
+	.id_table = zenergy_ids,
 	.driver = {
 		.name = DRVNAME,
 	},
 };
 
-static struct platform_device *amd_energy_platdev;
+static struct platform_device *zenergy_platdev;
 
 static const struct x86_cpu_id cpu_ids[] __initconst = {
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x01, NULL),	/* Zen */
@@ -377,41 +378,41 @@ static const struct x86_cpu_id cpu_ids[] __initconst = {
 };
 MODULE_DEVICE_TABLE(x86cpu, cpu_ids);
 
-static int __init amd_energy_init(void)
+static int __init zenergy_init(void)
 {
 	int ret;
 
 	if (!x86_match_cpu(cpu_ids))
 		return -ENODEV;
 
-	ret = platform_driver_register(&amd_energy_driver);
+	ret = platform_driver_register(&zenergy_driver);
 	if (ret)
 		return ret;
 
-	amd_energy_platdev = platform_device_alloc(DRVNAME, 0);
-	if (!amd_energy_platdev) {
-		platform_driver_unregister(&amd_energy_driver);
+	zenergy_platdev = platform_device_alloc(DRVNAME, 0);
+	if (!zenergy_platdev) {
+		platform_driver_unregister(&zenergy_driver);
 		return -ENOMEM;
 	}
 
-	ret = platform_device_add(amd_energy_platdev);
+	ret = platform_device_add(zenergy_platdev);
 	if (ret) {
-		platform_device_put(amd_energy_platdev);
-		platform_driver_unregister(&amd_energy_driver);
+		platform_device_put(zenergy_platdev);
+		platform_driver_unregister(&zenergy_driver);
 		return ret;
 	}
 
 	return ret;
 }
 
-static void __exit amd_energy_exit(void)
+static void __exit zenergy_exit(void)
 {
-	platform_device_unregister(amd_energy_platdev);
-	platform_driver_unregister(&amd_energy_driver);
+	platform_device_unregister(zenergy_platdev);
+	platform_driver_unregister(&zenergy_driver);
 }
 
-module_init(amd_energy_init);
-module_exit(amd_energy_exit);
+module_init(zenergy_init);
+module_exit(zenergy_exit);
 
 MODULE_DESCRIPTION("Driver for AMD Energy reporting from RAPL MSR via HWMON interface");
 MODULE_AUTHOR("Naveen Krishna Chatradhi <nchatrad@amd.com>");

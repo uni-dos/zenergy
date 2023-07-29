@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: |
           pacman -Syu --noconfirm git dkms linux-headers linux
-      - name: Build amd-energy package
+      - name: Build zenergy package
         id: build-package
         shell: bash
         run: |

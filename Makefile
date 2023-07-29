@@ -12,7 +12,7 @@
 KDIR ?= /lib/modules/`uname -r`/build
 
 default:
-	export CONFIG_SENSOR_AMD_ENERGY=m;	\
+	export CONFIG_SENSOR_zenergy=m;	\
 	$(MAKE) -C $(KDIR) M=$$PWD modules
 
 modules: default

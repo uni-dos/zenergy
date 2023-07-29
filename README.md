@@ -1,17 +1,12 @@
 .. SPDX-License-Identifier: GPL-2.0
+# Zenergy kernel driver
 
-Kernel driver amd_energy
+Based on AMD_ENERGY driver, but with some jiffies added so non-root users can read it safely.
+
+Kernel driver zenergy
 ==========================
 
-Supported chips:
-
-* AMD Family 17h Processors: Model 30h
-
-* AMD Family 19h Processors: Model 01h and 30h
-
-* AMD Family 19h Processors: Model 01h and 10h
-
-  Prefix: 'amd_energy'
+  Prefix: 'zenergy'
 
   Addresses used:  RAPL MSRs
 
@@ -30,11 +25,6 @@ Supported chips:
 	https://www.amd.com/system/files/TechDocs/55898_pub.zip
 
 Author: Naveen Krishna Chatradhi <nchatrad@amd.com>
-
-Security: CVE-2020-12912
-------------------------------
-
-Refer 2020 tab in https://www.amd.com/en/corporate/product-security#paragraph-313561 for details
 
 Description
 -----------
@@ -159,7 +149,7 @@ Loading
 If the Energy module was installed you should use the modprobe command to
 load the module.
 
-#> sudo modprobe amd_energy
+#> sudo modprobe zenergy
 
 The Energy module can also be loaded using insmod if the module was not
 installed:
@@ -167,7 +157,7 @@ installed:
 The Energy module can also be loaded using insmod if the module was not
 installed:
 
-#> sudo insmod ./amd_energy.ko
+#> sudo insmod ./zenergy.ko
 
 
 DKMS support
@@ -176,31 +166,31 @@ DKMS support
 Building Module with running version of kernel
 
 Add the module to DKMS tree:
-#> sudo dkms add ../amd_energy
+#> sudo dkms add ../zenergy
 
 Build the module using DKMS:
-#> sudo dkms build -m amd_energy/1.0
+#> sudo dkms build -m zenergy/1.0
 
 Install the module using DKMS:
-#> sudo dkms install --force amd_energy/1.0
+#> sudo dkms install --force zenergy/1.0
 
 Load the module:
-#> sudo modprobe amd_energy
+#> sudo modprobe zenergy
 
 Building Module with specific version of kernel
 
 Add the module to DKMS tree:
-#> sudo dkms add ../amd_energy
+#> sudo dkms add ../zenergy
 
 Build the module using DKMS:
-#> sudo dkms build amd_energy/1.0 -k linux_version
+#> sudo dkms build zenergy/1.0 -k linux_version
 
 Install the module using DKMS:
-#> sudo dkms install --force amd_energy/1.0 -k linux_version
+#> sudo dkms install --force zenergy/1.0 -k linux_version
 Module is built: /lib/modules/linux_version/updates/dkms/
 
 Notes: It is required to have specific linux verion header in /usr/src
 
 To remove module from dkms tree
-#> sudo dkms remove -m amd_energy/1.0 --all
-#> sudo rm -rf /usr/src/amd_energy-1.0/
+#> sudo dkms remove -m zenergy/1.0 --all
+#> sudo rm -rf /usr/src/zenergy-1.0/
