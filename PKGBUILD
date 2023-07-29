@@ -11,11 +11,9 @@ license=('GPL2')
 depends=('dkms')
 provides=('zenergy-dkms')
 
-source=("$_pkgname::git+$url.git"
-        "dkms.conf")
+source=("$_pkgname::git+$url.git")
 
-b2sums=("SKIP"
-       "5b574c8243405a10a8dc008874de865fbb89563d55f55c7549e4fb6174d1240d2aaafa344e7d18cffa5f6b5bbbaed88818601d05c892cf2a2589bc1507a308a2")
+b2sums=("SKIP")
 
 pkgver() {
   cd "$srcdir/$_pkgname"
