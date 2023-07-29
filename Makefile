@@ -10,6 +10,8 @@
 # If KDIR is not specified, assume the development source link
 # is in the modules directory for the running kernel
 KDIR ?= /lib/modules/`uname -r`/build
+obj-m := zenergy.o
+
 
 default:
 	export CONFIG_SENSOR_zenergy=m;	\

@@ -20,6 +20,12 @@ pkgver() {
   printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
+prepare() {
+  sed -e "s/@CFLGS@//" \
+      -e "s/@VERSION@/$pkgver/" \
+      -i "$srcdir/$_pkgname/dkms.conf"
+}
+
 package() {
   install -Dm644 "$srcdir/$_pkgname/dkms.conf" "$pkgdir/usr/src/$_pkgname-$pkgver/dkms.conf"
   install -Dm644 "$srcdir/$_pkgname/Makefile" "$pkgdir/usr/src/$_pkgname-$pkgver/Makefile"
