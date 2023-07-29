@@ -15,4 +15,4 @@ jobs:
             sudo apt install dkms linux-headers-$(uname -r)
         - name: DKMS install
           run: |
-            make modules_install
+            make modules
