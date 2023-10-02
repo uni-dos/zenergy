@@ -269,6 +269,7 @@ static const struct x86_cpu_id bit32_rapl_cpus[] = {
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x08, NULL),	/* Zen+ */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x11, NULL),	/* Zen APU */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x18, NULL),	/* Picasso */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x20, NULL),	/* Picasso APU */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x31, NULL),	/* Zen2 Threadripper */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x60, NULL),	/* Renoir */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x68, NULL),	/* Lucienne */
@@ -367,6 +368,7 @@ static const struct x86_cpu_id cpu_ids[] __initconst = {
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x08, NULL),	/* Zen+ */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x11, NULL),	/* Zen APU */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x18, NULL),	/* Picasso */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x20, NULL),	/* Picasso APU */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x31, NULL),	/* Zen2 Threadripper */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x60, NULL),	/* Renoir */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x17, 0x68, NULL),	/* Lucienne */
