@@ -399,6 +399,7 @@ static const struct x86_cpu_id cpu_ids[] __initconst = {
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x44, NULL),	/* Rembrandt */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x60, NULL),	/* Rembrandt */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x61, NULL),	/* Zen 4 */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x74, NULL),	/* Phoenix */
 	{}
 };
 MODULE_DEVICE_TABLE(x86cpu, cpu_ids);
