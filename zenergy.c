@@ -266,9 +266,9 @@ static int amd_create_sensor(struct device *dev,
 	for (i = 0; i < cpus + sockets; i++) {
 		s_config[i] = config;
 		if (i < cpus)
-			scnprintf(label_l[i], 10, "Ecore%03u", i);
+			scnprintf(label_l[i], 10, "core%03u", i);
 		else
-			scnprintf(label_l[i], 10, "Esocket%u", (i - cpus));
+			scnprintf(label_l[i], 10, "socket%u", (i - cpus));
 	}
 
 	s_config[i] = 0;
