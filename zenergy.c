@@ -27,7 +27,7 @@
 #include <linux/version.h>
 
 #define DRV_MODULE_DESCRIPTION	"AMD energy driver"
-#define DRV_MODULE_VERSION	"1.0"
+#define DRV_MODULE_VERSION	"1.0.1"
 
 MODULE_VERSION(DRV_MODULE_VERSION);
 
