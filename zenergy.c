@@ -80,7 +80,12 @@ static void get_energy_units(struct zenergy_data *data)
 {
 	u64 rapl_units;
 
+	#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 16, 0)
 	rdmsrl_safe(ENERGY_PWR_UNIT_MSR, &rapl_units);
+	#else
+	rdmsrq_safe(ENERGY_PWR_UNIT_MSR, &rapl_units);
+	#endif
+	
 	data->energy_units = (rapl_units & zenergy_UNIT_MASK) >> 8;
 }
 
@@ -88,8 +93,11 @@ static void __accumulate_delta(struct sensor_accumulator *accum,
 			       int cpu, u32 reg)
 {
 	u64 input;
-
+	#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 16, 0)
 	rdmsrl_safe_on_cpu(cpu, reg, &input);
+	#else
+	rdmsrq_safe_on_cpu(cpu, reg, &input);
+	#endif
 	input &= zenergy_MASK;
 
 	if (input >= accum->prev_value)
@@ -290,6 +298,7 @@ static const struct x86_cpu_id bit32_rapl_cpus[] = {
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x50, NULL),	/* Cezanne */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x44, NULL),	/* Rembrandt */
 	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x19, 0x60, NULL),	/* Rembrandt */
+	X86_MATCH_VENDOR_FAM_MODEL(AMD, 0x1A, 0x44, NULL),	/* Granite Ridge */
 	// Zen4 (0x19, 0x61) features 64-bit registers for both Core::X86::Msr::CORE_ENERGY_STAT & L3::L3CT::L3PackageEnergyStatus),
 	// c.f., https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/programmer-references/56713-B1_3_05.zip
 	{}
